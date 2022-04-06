@@ -11,18 +11,18 @@ interface WeatherApi {
     // Здесь мы будем описывать функции,
     // которые будут получать данные о погоде
 
-    // Получаем текущую погоду по городу
+    // Получаем текущую погоду по географич. координатам
     @GET("/weather")
-    suspend fun getWeatherByCity(
+    suspend fun getWeatherByCoord(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("appid") appid: String,
         @Query("units") unit: String = "metric"
     ): Response<WeatherModel>
 
-    // Получаем текущую погоду по географич. координатам
+    // Получаем текущую погоду по городу
     @GET("/weather")
-    suspend fun getWeatherByCoord(
+    suspend fun getWeatherByCity(
         @Query("q") city: String,
         @Query("appid") appid: String,
         @Query("units") unit: String = "metric"
