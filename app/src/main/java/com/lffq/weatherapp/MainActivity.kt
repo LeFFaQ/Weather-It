@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.lffq.weatherapp.network.WeatherApi
 import com.lffq.weatherapp.ui.theme.WeatherTutorialTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,7 +28,6 @@ class MainActivity : ComponentActivity() {
             // Указываются цвета светлой/темной тем,
             // Цвет заднего фона и определенный компонентов.
             WeatherTutorialTheme {
-
             }
         }
     }
