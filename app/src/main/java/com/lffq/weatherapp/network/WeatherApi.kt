@@ -12,7 +12,7 @@ interface WeatherApi {
     // которые будут получать данные о погоде
 
     // Получаем текущую погоду по географич. координатам
-    @GET("/weather")
+    @GET("/data/2.5/weather")
     suspend fun getWeatherByCoord(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
@@ -21,7 +21,7 @@ interface WeatherApi {
     ): Response<WeatherModel>
 
     // Получаем текущую погоду по городу
-    @GET("/weather")
+    @GET("/data/2.5/weather")
     suspend fun getWeatherByCity(
         @Query("q") city: String,
         @Query("appid") appid: String,
