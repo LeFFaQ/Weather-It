@@ -1,6 +1,5 @@
-package com.lffq.weatherapp
+package com.lffq.weatherapp.network
 
-import com.lffq.weatherapp.network.WeatherApi
 import com.lffq.weatherapp.network.models.current.WeatherModel
 import retrofit2.Response
 
