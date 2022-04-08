@@ -2,6 +2,7 @@ package com.lffq.weatherapp.di
 
 import com.lffq.weatherapp.network.WeatherApi
 import com.lffq.weatherapp.network.WeatherBuilder
+import com.lffq.weatherapp.network.WeatherRepository
 import com.lffq.weatherapp.network.WeatherRepositoryImpl
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -20,5 +21,5 @@ val networkModule = module {
 
     single { get<Retrofit>().create(WeatherApi::class.java) }
 
-    single { WeatherRepositoryImpl(get()) }
+    single<WeatherRepository> { WeatherRepositoryImpl(get()) }
 }
