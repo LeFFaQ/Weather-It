@@ -5,13 +5,22 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+
+/**
+ * Мост к OpenWeatherMap.
+ * Здесь описаны ключевые функции,
+ * при вызове которых, мы будем обращатся к OWM
+ */
 interface WeatherApi {
 
-    // Это наш мост к OpenWeatherMap.
-    // Здесь мы будем описывать функции,
-    // которые будут получать данные о погоде
-
-    // Получаем текущую погоду по географич. координатам
+    /**
+     * Получение текущей погоды по географич. координатам
+     * @param lat Широта
+     * @param lon Долгота
+     * @param appid API-ключ
+     * @param unit Единица измерения
+     * @return Результат запроса
+     */
     @GET("/data/2.5/weather")
     suspend fun getWeatherByCoord(
         @Query("lat") lat: Double,
@@ -20,7 +29,13 @@ interface WeatherApi {
         @Query("units") unit: String = "metric"
     ): Response<WeatherModel>
 
-    // Получаем текущую погоду по городу
+    /**
+     * Получение текущей погоды по городу
+     * @param q Необходимый город
+     * @param appid API-ключ
+     * @param unit Единица измерения
+     * @return Результат запроса
+     */
     @GET("/data/2.5/weather")
     suspend fun getWeatherByCity(
         @Query("q") city: String,
