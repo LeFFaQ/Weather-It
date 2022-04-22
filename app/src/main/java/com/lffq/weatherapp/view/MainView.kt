@@ -1,21 +1,22 @@
 package com.lffq.weatherapp.view
 
-import android.graphics.Bitmap
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-import com.lffq.weatherapp.R
+import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.*
 import com.lffq.weatherapp.viewmodel.MainViewModel
 import org.koin.androidx.compose.getViewModel
 
@@ -26,84 +27,111 @@ fun MainView() {
     val vm = getViewModel<MainViewModel>()
     // Наблюдаем за LiveData
     val weather by vm.weather.observeAsState()
-    val imgLoaded by vm.imageLoaded.observeAsState()
+    val icon by vm.currentIcon.observeAsState()
     val dataLoaded by vm.dataLoaded.observeAsState()
 
-    Scaffold {
-        if (imgLoaded == true && dataLoaded == true) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                weather?.let {
-                    LocationRow(city = it.name)
-                    MainRow(temp = it.main.temp, bitmap = vm.bitmap.value!!)
-                    MiscRow(humidity = it.main.humidity, wind = it.wind.speed, pressure = it.main.pressure)
-                }
-            }
-        } else {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        weather?.let {
+            TopBar(searchCity = vm.searchCity, onSearchCityChanged = { vm.onSearchCityChanged(it) })
+            CenterBar(
+                temperature = weather?.main?.temp!!,
+                city = weather?.name!!,
+                date = vm.getFormattedDate(),
+                icon = icon!!
+            )
+            BottomBar()
         }
 
     }
-
 }
 
-/**
- * Строка сверху.
- * Выводит город и дату формата:
- * "<День недели>, <Сокр. название месяца> <День месяца>, <4-значный год>"
- */
 @Composable
-fun LocationRow(city: String) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+fun TopBar(searchCity: String, onSearchCityChanged: (String) -> Unit) {
+    Card(
+        shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
+        elevation = 24.dp
     ) {
-        Text(text = city)
-        Text(text = "ddd, MMM d, yyyy")
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(82.dp)
+                .background(Color(0xFF217DE9))
+                .padding(bottom = 12.dp, end = 16.dp, start = 16.dp, top = 12.dp)
+        ) {
+            OutlinedTextField(
+                colors = TextFieldDefaults
+                    .outlinedTextFieldColors(
+                        backgroundColor = Color.White
+                    ),
+                shape = RoundedCornerShape(50),
+                modifier = Modifier.fillMaxSize(),
+                value = searchCity,
+                onValueChange = { onSearchCityChanged(it) },
+                singleLine = true
+
+            )
+        }
     }
 }
 
-/**
- * Основная строка.
- * Выводит показания температуры
- * и инонку описания (пасмурно, солнечно и т.д)
- */
 @Composable
-fun MainRow(temp: Number, bitmap: Bitmap) {
-    Column {
-        Image(painter = rememberAsyncImagePainter(bitmap), contentDescription = "Status")
-        Text(text = "1c")
-    }
-}
+fun CenterBar(temperature: Number, city: String, date: String, icon: Int) {
 
-/**
- * Дополнительная строка.
- * Выводит показания давления,
- * влажности и ветра
- */
-@Composable
-fun MiscRow(humidity: Number, wind: Number, pressure: Number) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceAround) {
-        MiscRowItem(icon = R.drawable.humidity_48, value = "${humidity}%")
-        MiscRowItem(icon = R.drawable.wind_48, value = "${wind}M/S")
-        MiscRowItem(icon = R.drawable.pressure_48, value = "${pressure}hPa")
-    }
-}
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(icon))
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = LottieConstants.IterateForever,
+    )
 
-/**
- * Конкретный элемент из MicsRow
- */
-@Composable
-fun MiscRowItem(@DrawableRes icon: Int, value: String) {
     Row(
         modifier = Modifier
-            .padding(vertical = 24.dp, horizontal = 16.dp)
-            .
+            .fillMaxWidth()
+            .padding(all = 30.dp),
+        horizontalArrangement = Arrangement.Center
     ) {
-        Image(painter = painterResource(id = icon), contentDescription = "icon")
-        Text(text = value)
+
+        LottieAnimation(composition = composition, progress, modifier = Modifier.size(128.dp))
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(start = 6.dp)
+        ) {
+            Text(text = "${temperature.toInt()}°C", style = TextStyle(fontSize = 36.sp))
+            Text(text = city)
+            Text(text = date)
+        }
     }
 }
+
+@Composable
+fun BottomBar() {
+
+    Card(
+        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+        elevation = 24.dp
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .background(Color(0xFF217DE9))
+        ) {
+            ForecastRow()
+            OtherDataColumn()
+        }
+    }
+}
+
+@Composable
+fun ForecastRow() {
+
+}
+
+@Composable
+fun OtherDataColumn() {
+
+}
+
 

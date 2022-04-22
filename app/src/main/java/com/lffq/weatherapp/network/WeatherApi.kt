@@ -31,7 +31,7 @@ interface WeatherApi {
 
     /**
      * Получение текущей погоды по городу
-     * @param q Необходимый город
+     * @param city Необходимый город
      * @param appid API-ключ
      * @param unit Единица измерения
      * @return Результат запроса

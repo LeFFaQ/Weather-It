@@ -7,11 +7,11 @@ import com.lffq.weatherapp.network.WeatherRepositoryImpl
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
+/**
+ * Модуль для Api, Retrofit и т.д.
+ *
+ */
 val networkModule = module {
-
-    // Модуль, предоставляющий доступ
-    // к всем необходимым объектам
-    // в любой момент времени
 
     single { WeatherBuilder.InterceptorInstance() }
 

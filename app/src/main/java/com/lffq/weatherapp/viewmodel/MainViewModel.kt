@@ -1,41 +1,48 @@
 package com.lffq.weatherapp.viewmodel
 
 import android.app.Application
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
+import android.content.Context
+import android.os.Build
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.ImageLoader
-import coil.request.ImageRequest
-import coil.request.SuccessResult
-import com.lffq.weatherapp.appid
+import com.lffq.weatherapp._dayIcons
+import com.lffq.weatherapp._nightIcons
 import com.lffq.weatherapp.network.WeatherRepository
 import com.lffq.weatherapp.network.models.current.WeatherModel
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaInstant
+import kotlinx.datetime.toJavaZoneId
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class MainViewModel(
     private val repo: WeatherRepository,
     private val application: Application
-): ViewModel() {
+) : ViewModel() {
 
     private val _weather = MutableLiveData<WeatherModel>()
     val weather: LiveData<WeatherModel> = _weather
 
-
     private val _dataLoaded = MutableLiveData<Boolean>()
-    private val _imageLoaded = MutableLiveData<Boolean>()
     val dataLoaded: LiveData<Boolean> = _dataLoaded
-    val imageLoaded: LiveData<Boolean> = _imageLoaded
 
-    private val _bitmap = MutableLiveData<Bitmap>()
-    val bitmap: LiveData<Bitmap> = _bitmap
+    private val _currentIcon = MutableLiveData<Int>()
+    val currentIcon: LiveData<Int> = _currentIcon
+
+    var searchCity by mutableStateOf("")
 
     // Функция, которая будет
     // Вызыватся при создании класса
     init {
-        getCurrentWeather()
+        getCurrentWeatherByCity("Kemerovo")
     }
 
     // Получение текущей погоды
@@ -43,36 +50,69 @@ class MainViewModel(
         // Вызов Suspend-функций
         viewModelScope.launch {
             // Получаем текущую погоду
-            val result = repo.getWeatherByCity("Kemerovo", appid)
+            val result = repo.getWeatherByCity("Kemerovo")
             // Проверяем на успешность
             if (result.isSuccessful) {
                 // Записываем
-                    result.body()?.let {
-                        _weather.value = it
-                        _dataLoaded.value = true
-                        getBitmap(it.weather[0].icon)
-                    }
+                result.body()?.let {
+                    _weather.value = it
+                    _dataLoaded.value = true
+                }
             }
         }
     }
 
-    private fun getBitmap(icon: String) {
+    fun getFormattedDate(): String {
+        val systemTZ = TimeZone.currentSystemDefault()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
+            val now = Clock.System.now()
+
+            val formatter = DateTimeFormatter.ofPattern("E, MMM d, yyyy")
+            return formatter.format(now.toJavaInstant().atZone(systemTZ.toJavaZoneId()))
+        }
+        val pattern = "E, MMM d, yyyy"
+
+        val locale = getCurrentLocale(context = application.applicationContext)
+        val simpleDateFormat = SimpleDateFormat(pattern, locale)
+
+        return simpleDateFormat.format(Date())
+    }
+
+    fun getCurrentLocale(context: Context): Locale? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.resources.configuration.locales.get(0)
+        } else {
+            context.resources.configuration.locale
+        }
+    }
+
+    fun chooseWeatherStatusIcon(icon: String) {
+
+        if ("n" in icon) {
+            _currentIcon.value = _nightIcons[icon]
+            return
+        }
+        _currentIcon.value = _dayIcons[icon]
+
+    }
+
+    fun getCurrentWeatherByCity(searchCity: String) {
         viewModelScope.launch {
-            val loader = ImageLoader(application.baseContext)
-            val request = ImageRequest.Builder(application.baseContext)
-                .data("https://openweathermap.org/img/wn/${icon}@2x.png")
-                .allowHardware(false)
-                .build()
+            val result = repo.getWeatherByCity(searchCity)
 
-            
-            val result = (loader.execute(request) as SuccessResult).drawable
-            _bitmap.value = (result as BitmapDrawable).bitmap
-            _imageLoaded.value = true
-
+            if (result.isSuccessful) {
+                result.body()?.let {
+                    _weather.value = it
+                    chooseWeatherStatusIcon(icon = it.weather[0].icon)
+                }
+            }
 
         }
+    }
 
+    fun onSearchCityChanged(new: String) {
+        searchCity = new
     }
 }
 

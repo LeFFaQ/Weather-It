@@ -5,22 +5,19 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * Контейнер
+ * с функциями для DI
+ */
 object WeatherBuilder {
 
-    // В этих трех функциях,
-    // мы будем создавать
-    // Экземпляры классов
-    // - Retrofit
-    // - OkHttpClient
-    // - HttpLoggingInterceptor
-    //
-    // Это нам понадобится позднее.
-
+    /**
+     * Создание клиента Retrofit
+     * @param client [OkHttpClient]
+     * @param url Базовый URL
+     * @return экземпляр [Retrofit]
+     */
     fun RetrofitInstance(client: OkHttpClient, url: String): Retrofit {
-        // Создаем экземпляр Retrofit
-        // Передаем наш OkHttpClient
-        // и Базовый URL
-        // (укажем позднее)
         return Retrofit.Builder()
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
@@ -28,23 +25,27 @@ object WeatherBuilder {
             .build()
     }
 
+    /**
+     * Создание клиента OkHttp
+     * @param loggingInterceptor [HttpLoggingInterceptor]
+     * @return экземпляр [OkHttpClient]
+     */
     fun OkHttpInstance(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-        // Создаем экземпляр OkHttpClient
-        // передаем HttpLoggingInterceptor
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
     }
 
+    /**
+     * Создание перехватчика запросов
+     * @return экземпляр [HttpLoggingInterceptor]
+     */
     fun InterceptorInstance(): HttpLoggingInterceptor {
-        // Создаем экземпляр HttpLoggingInterceptor
-        // и указываем уровень оповещения
         return HttpLoggingInterceptor()
+            // Уровень перехватывания
             .apply { this.level = HttpLoggingInterceptor.Level.BODY }
     }
 
 }
-
-
 
 
