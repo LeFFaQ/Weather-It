@@ -1,8 +1,9 @@
 package com.lffq.weatherapp.network
 
 import com.lffq.weatherapp.network.models.current.WeatherModel
+import com.lffq.weatherapp.network.models.geocoding.GeocodingModelItem
+import com.lffq.weatherapp.network.models.onecall.OneCallModel
 import retrofit2.Response
-import retrofit2.http.GET
 
 interface WeatherRepository {
 
@@ -16,11 +17,23 @@ interface WeatherRepository {
         unit: String = "metric"
     ): Response<WeatherModel>
 
-    @GET("/weather")
     suspend fun getWeatherByCity(
         city: String,
         unit: String = "metric"
     ): Response<WeatherModel>
+
+    suspend fun getDailyForecast(
+        lat: Double,
+        lon: Double,
+        appid: String,
+        exclude: String = "current,minutely,hourly,alerts",
+        unit: String = "metric"
+    ): Response<OneCallModel>
+
+
+    suspend fun getGeocoding(
+        city: String,
+    ): Response<List<GeocodingModelItem?>?>
 }
 
 

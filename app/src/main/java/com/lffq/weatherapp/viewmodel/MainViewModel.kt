@@ -6,12 +6,16 @@ import android.os.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lffq.weatherapp._dayIcons
 import com.lffq.weatherapp._nightIcons
+import com.lffq.weatherapp.local.DataStoreRepository
 import com.lffq.weatherapp.network.WeatherRepository
 import com.lffq.weatherapp.network.models.current.WeatherModel
 import kotlinx.coroutines.launch
@@ -23,8 +27,11 @@ import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class MainViewModel(
     private val repo: WeatherRepository,
+    private val DSRepo: DataStoreRepository,
     private val application: Application
 ) : ViewModel() {
 
@@ -42,7 +49,13 @@ class MainViewModel(
     // Функция, которая будет
     // Вызыватся при создании класса
     init {
-        getCurrentWeatherByCity("Kemerovo")
+        viewModelScope.launch {
+            DSRepo.readCityValues().collect { city ->
+                city.city?.let {
+                    getCurrentWeatherByCity(city.city)
+                }
+            }
+        }
     }
 
     // Получение текущей погоды
@@ -115,13 +128,4 @@ class MainViewModel(
         searchCity = new
     }
 }
-
-
-//initialize it in koin module
-//in composable:
-//val vm = getViewModel<MainViewModel>()
-
-//access to livedata's
-//val example: String by vm.exampleVar.observeAsState("")
-
 

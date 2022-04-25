@@ -1,5 +1,6 @@
 buildscript {
     ext {
+        nav_version = "2.4.2"
         compose_activity_version = '1.4.0'
         compose_version = '1.1.1'
         lifecycle_version = "2.5.0-beta01"
@@ -13,7 +14,11 @@ buildscript {
 
         coil_version = "2.0.0-rc03"
 
-        lottieVersion = "5.0.3"
+        lottie_version = "5.0.3"
+
+        preferences_version = "1.0.0"
+
+        splashscreen_version = "1.0.0-beta02"
     }
 }
 // Top-level build file where you can add configuration options common to all sub-projects/modules.

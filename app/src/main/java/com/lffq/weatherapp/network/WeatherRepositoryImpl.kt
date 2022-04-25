@@ -2,6 +2,8 @@ package com.lffq.weatherapp.network
 
 import com.lffq.weatherapp.BuildConfig
 import com.lffq.weatherapp.network.models.current.WeatherModel
+import com.lffq.weatherapp.network.models.geocoding.GeocodingModelItem
+import com.lffq.weatherapp.network.models.onecall.OneCallModel
 import retrofit2.Response
 
 
@@ -23,7 +25,23 @@ class WeatherRepositoryImpl(private val api: WeatherApi) : WeatherRepository {
         city: String,
         unit: String
     ): Response<WeatherModel> {
-        return api.getWeatherByCity(city, BuildConfig.API_KEY, unit)
+        return api.getWeatherByCity(city, BuildConfig.API_KEY)
+    }
+
+    override suspend fun getDailyForecast(
+        lat: Double,
+        lon: Double,
+        appid: String,
+        exclude: String,
+        unit: String
+    ): Response<OneCallModel> {
+        return api.getDailyForecast(lat, lon, BuildConfig.API_KEY)
+    }
+
+    override suspend fun getGeocoding(
+        city: String,
+    ): Response<List<GeocodingModelItem?>?> {
+        return api.getGeocoding(city, BuildConfig.API_KEY)
     }
 
 }
