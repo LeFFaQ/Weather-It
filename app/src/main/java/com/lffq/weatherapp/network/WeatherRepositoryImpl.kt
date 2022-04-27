@@ -31,9 +31,6 @@ class WeatherRepositoryImpl(private val api: WeatherApi) : WeatherRepository {
     override suspend fun getDailyForecast(
         lat: Double,
         lon: Double,
-        appid: String,
-        exclude: String,
-        unit: String
     ): Response<OneCallModel> {
         return api.getDailyForecast(lat, lon, BuildConfig.API_KEY)
     }

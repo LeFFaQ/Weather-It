@@ -25,9 +25,6 @@ interface WeatherRepository {
     suspend fun getDailyForecast(
         lat: Double,
         lon: Double,
-        appid: String,
-        exclude: String = "current,minutely,hourly,alerts",
-        unit: String = "metric"
     ): Response<OneCallModel>
 
 

@@ -41,7 +41,6 @@ class WelcomeViewModel(
     private val _selectedCity: MutableLiveData<GeocodingModelItem> = MutableLiveData()
     //val selectedCity: LiveData<GeocodingModelItem> = _selectedCity
 
-
     private val _skipState: MutableLiveData<Boolean> = MutableLiveData(false)
     val skipState: LiveData<Boolean> = _skipState
 

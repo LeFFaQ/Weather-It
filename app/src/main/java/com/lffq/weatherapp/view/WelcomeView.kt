@@ -29,7 +29,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -68,7 +67,8 @@ fun WelcomeView(navController: NavController) {
 
                           },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.White
+                    backgroundColor = MaterialTheme.colors.surface,
+                    contentColor = MaterialTheme.colors.onSurface
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,9 +88,9 @@ fun Title(modifier: Modifier) {
     Column(modifier = modifier.padding(top = 48.dp)) {
         Text(
             text = "Прежде чем мы начнем",
-            style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold)
+            style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onBackground)
         )
-        Text(text = "Укажите ваш город", style = TextStyle(fontSize = 24.sp))
+        Text(text = "Укажите ваш город", style = TextStyle(fontSize = 24.sp, color = MaterialTheme.colors.onBackground))
     }
 }
 
@@ -105,13 +105,16 @@ fun CityChooser(
 
 
     Card(
+        backgroundColor = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(20.dp),
         elevation = 24.dp,
         modifier = modifier
             .fillMaxWidth()
             .height((configuration.screenHeightDp / 2).dp)
             .padding(start = 24.dp, end = 24.dp)
+
     ) {
+
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -191,17 +194,20 @@ fun CityItem(item: GeocodingModelItem) {
  */
 @Composable
 fun Background(content: @Composable () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    val isLight = MaterialTheme.colors.isLight
+
+    Box(modifier = Modifier.fillMaxSize()
+        .background(MaterialTheme.colors.background)) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.ic_wave),
+                painter = painterResource(id = if (isLight) R.drawable.ic_wave_light else R.drawable.ic_wave_dark),
                 contentDescription = null,
                 modifier = Modifier.padding(top = 224.dp)
             )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF217DE9)),
+                    .background(MaterialTheme.colors.primary),
                 content = { }
             )
         }

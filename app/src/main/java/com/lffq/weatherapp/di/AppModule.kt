@@ -20,4 +20,3 @@ val appModule = module {
         WelcomeViewModel(repo = get(), DSRepo = get())
     }
 }
-

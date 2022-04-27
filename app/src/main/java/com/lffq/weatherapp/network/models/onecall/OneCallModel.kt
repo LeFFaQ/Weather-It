@@ -33,46 +33,46 @@ data class OneCallModel(
 data class DailyItem(
 
 	@field:SerializedName("moonset")
-	val moonset: Int? = null,
+	val moonset: Number? = null,
 
 	@field:SerializedName("sunrise")
-	val sunrise: Int? = null,
+	val sunrise: Number? = null,
 
 	@field:SerializedName("temp")
 	val temp: Temp? = null,
 
 	@field:SerializedName("moon_phase")
-	val moonPhase: Double? = null,
+	val moonPhase: Number? = null,
 
 	@field:SerializedName("uvi")
-	val uvi: Double? = null,
+	val uvi: Number? = null,
 
 	@field:SerializedName("moonrise")
-	val moonrise: Int? = null,
+	val moonrise: Number? = null,
 
 	@field:SerializedName("pressure")
-	val pressure: Int? = null,
+	val pressure: Number? = null,
 
 	@field:SerializedName("clouds")
-	val clouds: Int? = null,
+	val clouds: Number? = null,
 
 	@field:SerializedName("feels_like")
 	val feelsLike: FeelsLike? = null,
 
 	@field:SerializedName("wind_gust")
-	val windGust: Double? = null,
+	val windGust: Number? = null,
 
 	@field:SerializedName("dt")
-	val dt: Int? = null,
+	val dt: Number? = null,
 
 	@field:SerializedName("pop")
-	val pop: Int? = null,
+	val pop: Number? = null,
 
 	@field:SerializedName("wind_deg")
-	val windDeg: Int? = null,
+	val windDeg: Number? = null,
 
 	@field:SerializedName("dew_point")
-	val dewPoint: Double? = null,
+	val dewPoint: Number? = null,
 
 	@field:SerializedName("sunset")
 	val sunset: Int? = null,
@@ -81,49 +81,49 @@ data class DailyItem(
 	val weather: List<WeatherItem?>? = null,
 
 	@field:SerializedName("humidity")
-	val humidity: Int? = null,
+	val humidity: Number? = null,
 
 	@field:SerializedName("wind_speed")
-	val windSpeed: Double? = null,
+	val windSpeed: Number? = null,
 
 	@field:SerializedName("rain")
-	val rain: Double? = null
+	val rain: Number? = null
 )
 
 data class Temp(
 
 	@field:SerializedName("min")
-	val min: Double? = null,
+	val min: Number? = null,
 
 	@field:SerializedName("max")
-	val max: Double? = null,
+	val max: Number? = null,
 
 	@field:SerializedName("eve")
-	val eve: Double? = null,
+	val eve: Number? = null,
 
 	@field:SerializedName("night")
-	val night: Double? = null,
+	val night: Number? = null,
 
 	@field:SerializedName("day")
-	val day: Double? = null,
+	val day: Number? = null,
 
 	@field:SerializedName("morn")
-	val morn: Double? = null
+	val morn: Number? = null
 )
 
 data class FeelsLike(
 
 	@field:SerializedName("eve")
-	val eve: Double? = null,
+	val eve: Number? = null,
 
 	@field:SerializedName("night")
-	val night: Double? = null,
+	val night: Number? = null,
 
 	@field:SerializedName("day")
-	val day: Double? = null,
+	val day: Number? = null,
 
 	@field:SerializedName("morn")
-	val morn: Double? = null
+	val morn: Number? = null
 )
 
 data class WeatherItem(

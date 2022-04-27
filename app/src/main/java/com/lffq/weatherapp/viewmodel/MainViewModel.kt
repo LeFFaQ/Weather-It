@@ -18,6 +18,7 @@ import com.lffq.weatherapp._nightIcons
 import com.lffq.weatherapp.local.DataStoreRepository
 import com.lffq.weatherapp.network.WeatherRepository
 import com.lffq.weatherapp.network.models.current.WeatherModel
+import com.lffq.weatherapp.network.models.onecall.OneCallModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -38,6 +39,9 @@ class MainViewModel(
     private val _weather = MutableLiveData<WeatherModel>()
     val weather: LiveData<WeatherModel> = _weather
 
+    private val _forecast = MutableLiveData<OneCallModel>()
+    val forecast: LiveData<OneCallModel> = _forecast
+
     private val _dataLoaded = MutableLiveData<Boolean>()
     val dataLoaded: LiveData<Boolean> = _dataLoaded
 
@@ -53,6 +57,7 @@ class MainViewModel(
             DSRepo.readCityValues().collect { city ->
                 city.city?.let {
                     getCurrentWeatherByCity(city.city)
+                    forecastFromOneCall(lat = city.lat!!, lon = city.lon!!)
                 }
             }
         }
@@ -126,6 +131,17 @@ class MainViewModel(
 
     fun onSearchCityChanged(new: String) {
         searchCity = new
+    }
+
+    fun forecastFromOneCall(lat: Double, lon: Double) {
+        viewModelScope.launch {
+            val result = repo.getDailyForecast(lat, lon)
+            if (result.isSuccessful) {
+                result.body()?.let {
+                    _forecast.value = it
+                }
+            }
+        }
     }
 }
 
