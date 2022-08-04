@@ -8,14 +8,13 @@
  * Copyright (c) 2022 . All rights reserved.
  */
 
-package com.lffq.weatherapp.local
+package com.lffq.weatherapp.data
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import com.lffq.weatherapp.network.models.base.onecall.Current
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -59,79 +58,78 @@ class DSRepositoryImpl(context: Context) : DataStoreRepository {
 //            }
 //    }
 
-    override suspend fun saveSkipState(state: Boolean) {
+    override suspend fun saveSkipState() {
         dataStore.edit { preferences ->
-            Log.d(TAG, "saveSkipState: ${state}")
-            preferences[PreferencesKey.skipState] = state
+            preferences[PreferencesKey.skipState] = true
         }
     }
 
     override fun readSkipState(): Flow<Boolean> {
         return dataStore.data
-            .catch { exception ->
-                if (exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
+            .onCatch()
+            .map { preferences ->
+                preferences[PreferencesKey.skipState] ?: false
             }
-            .map {
-                Log.d(TAG, "readSkipState: ${it[PreferencesKey.skipState]}")
-                it[PreferencesKey.skipState] ?: false }
     }
 
-    override suspend fun saveCityValues(values: CityValues) {
+    override suspend fun saveCityValues(values: CityValues?) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKey.city] = values.city!!
-            preferences[PreferencesKey.lat] = values.lat!!
-            preferences[PreferencesKey.lon] = values.lon!!
+            values?.let { values ->
+                preferences[PreferencesKey.city] = values.city!!
+                preferences[PreferencesKey.lon] = values.lon!!
+                preferences[PreferencesKey.lat] = values.lat!!
+            }
         }
     }
 
     override fun readCityValues(): Flow<CityValues> {
+
         return dataStore.data
-            .catch { exception ->
-                if (exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
-            }
-            .map {
+            .onCatch()
+            .map { preferences ->
+                val city = preferences[PreferencesKey.city]
+                val lon = preferences[PreferencesKey.lon]
+                val lat = preferences[PreferencesKey.lat]
+
                 CityValues(
-                    it[PreferencesKey.city],
-                    it[PreferencesKey.lon],
-                    it[PreferencesKey.lat]
+                    city = checkNotNull(city),
+                    lon = checkNotNull(lon),
+                    lat = checkNotNull(lat)
                 )
             }
     }
 
-    override suspend fun saveClimaticValues(values: ClimaticValues) {
+    override suspend fun saveClimaticValues(values: Current?) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKey.temp] = values.temp!!
-            preferences[PreferencesKey.date] = values.date!!
+            values.let { values ->
+                //preferences[PreferencesKey.temp] = values.temp
+                //preferences[PreferencesKey.date] = values.date!!
+            }
         }
     }
 
-    override fun readClimaticValues(): Flow<ClimaticValues> {
-        return dataStore.data
-            .catch { exception ->
-                if (exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
-            }
-            .map {
-                ClimaticValues(
-                    it[PreferencesKey.temp],
-                    it[PreferencesKey.date],
-                )
-            }
+    override fun readClimaticValues(): Flow<Current> {
+//        return dataStore.data
+//            .onCatch()
+//            .map { preferences ->
+//                val temp = preferences[PreferencesKey.temp]
+//                val date = preferences[PreferencesKey.date]
+//
+//                Current()
+//            }
+        TODO()
+    }
+
+    private fun Flow<Preferences>.onCatch() = catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
+        }
     }
 
     private object PreferencesKey {
-        val skipState = booleanPreferencesKey("skip_state")
+        val skipState = booleanPreferencesKey(name = "skip_state")
 
         val lat = doublePreferencesKey(name = "lat_pref")
         val lon = doublePreferencesKey(name = "lon_pref")

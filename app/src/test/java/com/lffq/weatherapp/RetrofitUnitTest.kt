@@ -1,10 +1,20 @@
+/*
+ *  __         ______     ______   ______   ______     ______
+ * /\ \       /\  ___\   /\  ___\ /\  ___\ /\  __ \   /\  __ \
+ * \ \ \____  \ \  __\   \ \  __\ \ \  __\ \ \  __ \  \ \ \/\_\
+ *  \ \_____\  \ \_____\  \ \_\    \ \_\    \ \_\ \_\  \ \___\_\
+ *   \/_____/   \/_____/   \/_/     \/_/     \/_/\/_/   \/___/_/
+ * Created by LeFFaQ
+ * Copyright (c) 2022 . All rights reserved.
+ */
+
 package com.lffq.weatherapp
 
 import com.lffq.weatherapp.network.WeatherApi
 import com.lffq.weatherapp.network.WeatherBuilder
 import com.lffq.weatherapp.network.WeatherRepository
 import com.lffq.weatherapp.network.WeatherRepositoryImpl
-import com.lffq.weatherapp.network.models.current.WeatherModel
+import com.lffq.weatherapp.network.models.base.current.WeatherModel
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 

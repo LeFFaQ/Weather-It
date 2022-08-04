@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  __         ______     ______   ______   ______     ______
+  ~ /\ \       /\  ___\   /\  ___\ /\  ___\ /\  __ \   /\  __ \
+  ~ \ \ \____  \ \  __\   \ \  __\ \ \  __\ \ \  __ \  \ \ \/\_\
+  ~  \ \_____\  \ \_____\  \ \_\    \ \_\    \ \_\ \_\  \ \___\_\
+  ~   \/_____/   \/_____/   \/_/     \/_/     \/_/\/_/   \/___/_/
+  ~ Created by LeFFaQ
+  ~ Copyright (c) 2022 . All rights reserved.
+  -->
+
 <resources>
     <color name="ic_launcher_background">#F1FDFF</color>
 </resources>

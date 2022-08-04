@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import com.lffq.weatherapp.view.MainView
 import com.lffq.weatherapp.view.WelcomeView
 
+
 @Composable
 fun SetupNavGraph(
     navHostController: NavHostController,

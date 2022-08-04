@@ -8,14 +8,12 @@
  * Copyright (c) 2022 . All rights reserved.
  */
 
-package com.lffq.weatherapp.di
+package com.lffq.weatherapp.usecases.network
 
-import com.lffq.weatherapp.data.DSRepositoryImpl
-import com.lffq.weatherapp.data.DataStoreRepository
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+class GetCurrentWeatherUseCase {
 
+    fun execute() {
 
-val dataModule = module {
-    single<DataStoreRepository> { DSRepositoryImpl(androidContext()) }
+    }
+
 }

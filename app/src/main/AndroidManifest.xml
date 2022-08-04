@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  __         ______     ______   ______   ______     ______
+  ~ /\ \       /\  ___\   /\  ___\ /\  ___\ /\  __ \   /\  __ \
+  ~ \ \ \____  \ \  __\   \ \  __\ \ \  __\ \ \  __ \  \ \ \/\_\
+  ~  \ \_____\  \ \_____\  \ \_\    \ \_\    \ \_\ \_\  \ \___\_\
+  ~   \/_____/   \/_____/   \/_/     \/_/     \/_/\/_/   \/___/_/
+  ~ Created by LeFFaQ
+  ~ Copyright (c) 2022 . All rights reserved.
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lffq.weatherapp">
 
+
     <!--Подключим первое разрешение: на использование Интернета-->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!--Разрешения на пользования геолокацией-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
+
 
     <application
         android:allowBackup="true"
@@ -12,7 +30,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:name=".App"
-        android:theme="@style/Theme.WeatherTutorial">
+        android:theme="@style/Theme.CustomSplashScreen">
+        <!--API-ключ для Google Maps-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

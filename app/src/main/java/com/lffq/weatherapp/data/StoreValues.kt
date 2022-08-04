@@ -8,7 +8,7 @@
  * Copyright (c) 2022 . All rights reserved.
  */
 
-package com.lffq.weatherapp.local
+package com.lffq.weatherapp.data
 
 data class ClimaticValues(
     val temp: Int?,
@@ -16,7 +16,7 @@ data class ClimaticValues(
 )
 
 data class CityValues(
-    val city: String?,
-    val lon: Double?,
-    val lat: Double?
+    val city: String? = null,
+    val lon: Double? = null,
+    val lat: Double? = null
 )

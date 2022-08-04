@@ -8,14 +8,12 @@
  * Copyright (c) 2022 . All rights reserved.
  */
 
-package com.lffq.weatherapp.di
+package com.lffq.weatherapp.network.models.base.current
 
-import com.lffq.weatherapp.data.DSRepositoryImpl
-import com.lffq.weatherapp.data.DataStoreRepository
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import com.google.gson.annotations.SerializedName
 
+data class Clouds(
 
-val dataModule = module {
-    single<DataStoreRepository> { DSRepositoryImpl(androidContext()) }
-}
+    @field:SerializedName("all")
+    val all: Int
+)

@@ -1,3 +1,13 @@
+/*
+ *  __         ______     ______   ______   ______     ______
+ * /\ \       /\  ___\   /\  ___\ /\  ___\ /\  __ \   /\  __ \
+ * \ \ \____  \ \  __\   \ \  __\ \ \  __\ \ \  __ \  \ \ \/\_\
+ *  \ \_____\  \ \_____\  \ \_\    \ \_\    \ \_\ \_\  \ \___\_\
+ *   \/_____/   \/_____/   \/_/     \/_/     \/_/\/_/   \/___/_/
+ * Created by LeFFaQ
+ * Copyright (c) 2022 . All rights reserved.
+ */
+
 package com.lffq.weatherapp
 
 
@@ -23,6 +33,11 @@ val _nightIcons = mapOf(
     "11n" to R.raw.thunderstorms_night_overcast,
     "13n" to R.raw.overcast_night_snow,
     "50n" to R.raw.overcast_night_haze,
+)
+
+val appPermissions = listOf(
+    android.Manifest.permission.ACCESS_FINE_LOCATION,
+    android.Manifest.permission.ACCESS_COARSE_LOCATION
 )
 
 

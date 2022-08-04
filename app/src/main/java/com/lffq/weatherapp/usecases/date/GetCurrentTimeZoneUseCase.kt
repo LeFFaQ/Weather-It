@@ -8,14 +8,13 @@
  * Copyright (c) 2022 . All rights reserved.
  */
 
-package com.lffq.weatherapp.di
+package com.lffq.weatherapp.usecases.date
 
-import com.lffq.weatherapp.data.DSRepositoryImpl
-import com.lffq.weatherapp.data.DataStoreRepository
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import kotlinx.datetime.TimeZone
 
+class GetCurrentTimeZoneUseCase {
 
-val dataModule = module {
-    single<DataStoreRepository> { DSRepositoryImpl(androidContext()) }
+    fun execute(): TimeZone {
+        return TimeZone.currentSystemDefault()
+    }
 }

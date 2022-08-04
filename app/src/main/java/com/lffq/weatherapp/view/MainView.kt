@@ -1,6 +1,15 @@
+/*
+ *  __         ______     ______   ______   ______     ______
+ * /\ \       /\  ___\   /\  ___\ /\  ___\ /\  __ \   /\  __ \
+ * \ \ \____  \ \  __\   \ \  __\ \ \  __\ \ \  __ \  \ \ \/\_\
+ *  \ \_____\  \ \_____\  \ \_\    \ \_\    \ \_\ \_\  \ \___\_\
+ *   \/_____/   \/_____/   \/_/     \/_/     \/_/\/_/   \/___/_/
+ * Created by LeFFaQ
+ * Copyright (c) 2022 . All rights reserved.
+ */
+
 package com.lffq.weatherapp.view
 
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,16 +25,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
-import com.lffq.weatherapp._dayIcons
-import com.lffq.weatherapp._nightIcons
-import com.lffq.weatherapp.network.models.onecall.DailyItem
-import com.lffq.weatherapp.network.models.onecall.OneCallModel
+import com.lffq.weatherapp.network.models.base.onecall.DailyItem
+import com.lffq.weatherapp.network.models.base.onecall.OneCallModel
+import com.lffq.weatherapp.usecases.date.GetFormattedDateUseCase
+import com.lffq.weatherapp.usecases.date.GetTimeFromUnixUseCase
+import com.lffq.weatherapp.usecases.other.GetIconFromIdUseCase
 import com.lffq.weatherapp.viewmodel.MainViewModel
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toJavaZoneId
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
-import java.time.Instant
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun MainView() {
@@ -33,29 +40,34 @@ fun MainView() {
     // Ссылка на ViewModel
     val vm = getViewModel<MainViewModel>()
     // Наблюдаем за LiveData
-    val weather by vm.weather.observeAsState()
-    val icon by vm.currentIcon.observeAsState()
+    //val weather by vm.weather.observeAsState()
+    //val icon by vm.currentIcon.observeAsState()
     val forecast by vm.forecast.observeAsState()
     val dataLoaded by vm.dataLoaded.observeAsState()
 
 
+    forecast?.let {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-    ) {
-        weather?.let {
+        val icon = get<GetIconFromIdUseCase>()
+            .execute(it.current.weather[0].icon)
+
+        val date = get<GetFormattedDateUseCase>()
+            .execute()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+        ) {
             TopBar(searchCity = vm.searchCity, onSearchCityChanged = { vm.onSearchCityChanged(it) })
             CenterBar(
-                temperature = weather?.main?.temp!!,
-                city = weather?.name!!,
-                date = vm.getFormattedDate(),
-                icon = icon!!
+                temperature = it.current.temp,
+                city = "${it.lat}",
+                date = date,
+                icon = icon
             )
-            forecast?.let { it1 -> BottomBar(it1) }
+            BottomBar(it)
         }
-
     }
 }
 
@@ -159,40 +171,25 @@ fun ForecastRow(forecast: OneCallModel) {
     }
 }
 
+
+
 @Composable
 fun ForecastRowItem(item: DailyItem) {
 
-    fun _chooseIcon(icon: String): Int {
-        return if ("n" in icon) {
-            _nightIcons[icon]!!
-        } else {
-            _dayIcons[icon]!!
-        }
-    }
+    val unixTime = get<GetTimeFromUnixUseCase>()
+        .execute(item.dt)
 
-    fun _fromUnix(instant: Long): String {
-        val systemTZ = TimeZone.currentSystemDefault()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    val icon = get<GetIconFromIdUseCase>()
+        .execute(item.weather[0].icon)
 
-            val unix: Instant = Instant.ofEpochSecond(instant)
-
-            val formatter = DateTimeFormatter.ofPattern("E d")
-            return formatter.format(unix.atZone(systemTZ.toJavaZoneId()))
-        }
-
-        return "Some date at Build.VERSION_CODES.O"
-    }
-
-
-
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(_chooseIcon(item.weather!![0]!!.icon!!)))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(icon))
     val progress by animateLottieCompositionAsState(
         composition,
         iterations = LottieConstants.IterateForever,
     )
 
     Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-        Text(_fromUnix(item.dt!!.toLong()))
+        Text(unixTime)
         LottieAnimation(composition = composition, progress = progress, modifier = Modifier.size(24.dp))
         Text("${item.temp?.day?.toInt()}°/${item.temp?.night?.toInt()}°")
     }
@@ -201,5 +198,3 @@ fun ForecastRowItem(item: DailyItem) {
 @Composable
 fun OtherDataColumn() {
 }
-
-

@@ -1,8 +1,18 @@
+/*
+ *  __         ______     ______   ______   ______     ______
+ * /\ \       /\  ___\   /\  ___\ /\  ___\ /\  __ \   /\  __ \
+ * \ \ \____  \ \  __\   \ \  __\ \ \  __\ \ \  __ \  \ \ \/\_\
+ *  \ \_____\  \ \_____\  \ \_\    \ \_\    \ \_\ \_\  \ \___\_\
+ *   \/_____/   \/_____/   \/_/     \/_/     \/_/\/_/   \/___/_/
+ * Created by LeFFaQ
+ * Copyright (c) 2022 . All rights reserved.
+ */
+
 package com.lffq.weatherapp.network
 
-import com.lffq.weatherapp.network.models.current.WeatherModel
-import com.lffq.weatherapp.network.models.geocoding.GeocodingModelItem
-import com.lffq.weatherapp.network.models.onecall.OneCallModel
+import com.lffq.weatherapp.network.models.base.current.WeatherModel
+import com.lffq.weatherapp.network.models.base.geocoding.GeocodingModelItem
+import com.lffq.weatherapp.network.models.base.onecall.OneCallModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -61,7 +71,7 @@ interface WeatherApi {
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("appid") appid: String,
-        @Query("exclude") exclude: String = "current,minutely,hourly,alerts",
+        @Query("exclude") exclude: String = "minutely,hourly,alerts",
         @Query("units") unit: String = "metric"
     ): Response<OneCallModel>
 
@@ -78,6 +88,13 @@ interface WeatherApi {
         @Query("q") city: String,
         @Query("appid") appid: String,
     ): Response<List<GeocodingModelItem?>?>
+
+    @GET("/geo/1.0/reverse")
+    suspend fun getCityFromLatLng(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+        @Query("appid") appid: String,
+    ): Response<List<GeocodingModelItem>>
 
 }
 

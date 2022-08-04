@@ -8,14 +8,19 @@
  * Copyright (c) 2022 . All rights reserved.
  */
 
-package com.lffq.weatherapp.di
+package com.lffq.weatherapp.usecases.other
 
-import com.lffq.weatherapp.data.DSRepositoryImpl
-import com.lffq.weatherapp.data.DataStoreRepository
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import com.lffq.weatherapp._dayIcons
+import com.lffq.weatherapp._nightIcons
 
+class GetIconFromIdUseCase {
 
-val dataModule = module {
-    single<DataStoreRepository> { DSRepositoryImpl(androidContext()) }
+    fun execute(icon: String): Int {
+        return if ("n" in icon) {
+            _nightIcons[icon]!!
+        } else {
+            _dayIcons[icon]!!
+        }
+    }
+
 }

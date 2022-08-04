@@ -10,12 +10,9 @@
 
 package com.lffq.weatherapp.di
 
-import com.lffq.weatherapp.data.DSRepositoryImpl
-import com.lffq.weatherapp.data.DataStoreRepository
-import org.koin.android.ext.koin.androidContext
+import com.lffq.weatherapp.usecases.other.GetIconFromIdUseCase
 import org.koin.dsl.module
 
-
-val dataModule = module {
-    single<DataStoreRepository> { DSRepositoryImpl(androidContext()) }
+val otherModule = module {
+    factory { GetIconFromIdUseCase() }
 }

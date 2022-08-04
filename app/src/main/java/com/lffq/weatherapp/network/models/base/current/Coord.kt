@@ -8,22 +8,15 @@
  * Copyright (c) 2022 . All rights reserved.
  */
 
-package com.lffq.weatherapp.local
+package com.lffq.weatherapp.network.models.base.current
 
-import kotlinx.coroutines.flow.Flow
+import com.google.gson.annotations.SerializedName
 
-interface DataStoreRepository {
+data class Coord(
 
-    suspend fun saveSkipState(state: Boolean)
+    @field:SerializedName("lon")
+    val lon: Double,
 
-    fun readSkipState(): Flow<Boolean>
-
-    suspend fun saveCityValues(values: CityValues)
-
-    fun readCityValues(): Flow<CityValues>
-
-    suspend fun saveClimaticValues(values: ClimaticValues)
-
-    fun readClimaticValues(): Flow<ClimaticValues>
-
-}
+    @field:SerializedName("lat")
+    val lat: Double
+)

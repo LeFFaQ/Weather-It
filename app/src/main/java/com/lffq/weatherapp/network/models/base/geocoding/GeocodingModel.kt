@@ -8,7 +8,7 @@
  * Copyright (c) 2022 . All rights reserved.
  */
 
-package com.lffq.weatherapp.network.models.geocoding
+package com.lffq.weatherapp.network.models.base.geocoding
 
 import com.google.gson.annotations.SerializedName
 
